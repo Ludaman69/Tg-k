@@ -1,0 +1,21 @@
+{
+  "name": "vortex-messenger",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n server,web -c \"#6366f1\",\"#8b5cf6\" \"npm run dev -w apps/server\" \"npm run dev -w apps/web\"",
+    "build": "npm run build -w apps/server && npm run build -w apps/web",
+    "db:push": "npm run db:push -w apps/server",
+    "db:seed": "npm run db:seed -w apps/server",
+    "setup": "npm install && npm run db:push && npm run db:seed",
+    "start": "npm run dev",
+    "android:debug": "npm run android:debug -w apps/web",
+    "android:release": "npm run android:release -w apps/web",
+    "cap:sync": "npm run cap:sync -w apps/web"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

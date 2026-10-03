@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Splash screen иконка — логотип приложения, отображается при запуске TWA -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="128dp"
+    android:height="128dp"
+    android:viewportWidth="128"
+    android:viewportHeight="128">
+    <path
+        android:fillColor="#6366f1"
+        android:pathData="M24,24h80v80H24z"
+        android:strokeWidth="0" />
+    <path
+        android:fillColor="#ffffff"
+        android:pathData="M40,40h16v16H40zM40,64h32v8H40zM56,40h20v16H56z"
+        android:strokeWidth="0" />
+</vector>

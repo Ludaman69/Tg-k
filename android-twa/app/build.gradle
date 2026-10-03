@@ -1,0 +1,73 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.bkonekte.app'
+    compileSdk 36
+
+    signingConfigs {
+        release {
+            storeFile file('../bkonekte-release.keystore')
+            storePassword 'android'
+            keyAlias 'bkonekte'
+            keyPassword 'android'
+        }
+    }
+
+    defaultConfig {
+        applicationId 'com.bkonekte.app'
+        minSdk 26
+        targetSdk 36
+        versionCode 117
+        versionName "1.0.17"
+
+        // URL вашего PWA
+        buildConfigField 'String', 'TWA_URL', '"https://tg-k.ru"'
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles(
+                getDefaultProguardFile('proguard-android-optimize.txt'),
+                'proguard-rules.pro'
+            )
+            signingConfig signingConfigs.release
+        }
+        debug {
+            debuggable true
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    packaging {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+
+dependencies {
+    // Поддержка AppCompat для темы (Theme.AppCompat.NoActionBar)
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+
+    // Google Android Browser Helper — основа TWA
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.7.3'
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bkonekte</string>
+    <string name="app_short_name">Bkonekte</string>
+    <string name="app_description">Современный мессенджер с защитой конфиденциальности</string>
+    <string name="default_url">https://tg-k.ru</string>
+</resources>

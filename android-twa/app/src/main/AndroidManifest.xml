@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Для push-уведомлений через FCM (раскомментировать при использовании Firebase) -->
+    <!--
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    -->
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Bkonekte"
+        android:networkSecurityConfig="@xml/network_security_config">
+
+        <!-- TWA: Main Activity -->
+        <!--
+            Использует com.google.androidbrowserhelper.trusted.TwaActivity из библиотеки
+            androidbrowserhelper. Эта Activity открывает ваше PWA в Trusted Web Activity
+            без адресной строки при условии верификации через Digital Asset Links.
+        -->
+        <activity
+            android:name="com.bkonekte.app.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:windowSoftInputMode="adjustResize">
+
+            <!-- Запуск с главного экрана / launcher -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Deep links: открывать все URL вашего домена в TWA -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="tg-k.ru"
+                    android:pathPrefix="/" />
+            </intent-filter>
+
+            <!-- ═══════════════════════════════════════════════════════ -->
+            <!-- ВАЖНО: все TWA мета-данные ДОЛЖНЫ быть внутри <activity> -->
+            <!-- LauncherActivity читает ActivityInfo.metaData,          -->
+            <!-- а не ApplicationInfo.metaData                           -->
+            <!-- ═══════════════════════════════════════════════════════ -->
+
+            <!-- URL вашего PWA (ОБЯЗАТЕЛЬНО) -->
+            <meta-data
+                android:name="android.support.customtabs.trusted.DEFAULT_URL"
+                android:value="https://tg-k.ru" />
+
+            <!-- Цвет статус-бара -->
+            <meta-data
+                android:name="android.support.customtabs.trusted.STATUS_BAR_COLOR"
+                android:resource="@color/primary" />
+
+            <!-- Разрешить офлайн-режим (Service Worker) -->
+            <meta-data
+                android:name="android.support.customtabs.trusted.OFFLINE_AVAILABLE"
+                android:value="true" />
+
+            <!-- Splash screen: изображение -->
+            <meta-data
+                android:name="android.support.customtabs.trusted.SPLASH_IMAGE_DRAWABLE"
+                android:resource="@drawable/ic_splash" />
+
+            <!-- Splash screen: цвет фона -->
+            <meta-data
+                android:name="android.support.customtabs.trusted.SPLASH_SCREEN_BACKGROUND_COLOR"
+                android:resource="@color/primary" />
+
+            <!-- Цвет фона для офлайн-страницы -->
+            <meta-data
+                android:name="android.support.customtabs.trusted.BACKGROUND_COLOR"
+                android:resource="@color/background" />
+
+            <!-- Размер splash screen: 0 = центрировать изображение -->
+            <meta-data
+                android:name="android.support.customtabs.trusted.SPLASH_IMAGE_TRANSFORM"
+                android:value="0" />
+        </activity>
+
+        <!--
+        ══════════════════════════════════════════════════════════════════
+        ДЛЯ ПУШ-УВЕДОМЛЕНИЙ ЧЕРЕЗ FCM (Firebase Cloud Messaging)
+
+        Если используете Firebase, раскомментируйте следующий блок сервиса:
+        ══════════════════════════════════════════════════════════════════
+        <service
+            android:name="com.bkonekte.app.fcm.BkonekteMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="bkonekte_messages" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_notification" />
+        -->
+
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <!-- DelegationService — ОБЯЗАТЕЛЕН для androidbrowserhelper 2.x   -->
+        <!-- Без него LauncherActivity падает на старте                     -->
+        <!-- ═══════════════════════════════════════════════════════════════ -->
+        <service
+            android:name="com.google.androidbrowserhelper.trusted.DelegationService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.support.customtabs.trusted.TRUSTED_WEB_ACTIVITY_SERVICE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+    </application>
+
+</manifest>

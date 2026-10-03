@@ -1,0 +1,108 @@
+package com.bkonekte.app.fcm
+
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
+import android.os.Build
+import android.util.Log
+import androidx.core.app.NotificationCompat
+import com.bkonekte.app.MainActivity
+import com.bkonekte.app.R
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
+
+/**
+ * FCM Messaging Service для TWA.
+ *
+ * Этот сервис получает push-уведомления от Firebase Cloud Messaging
+ * и отображает их как нативные Android-уведомления.
+ *
+ * ⚠ Чтобы активировать:
+ *   1. Добавьте Firebase в проект (см. README-TWA.md → Шаг 6)
+ *   2. Раскомментируйте dependency в app/build.gradle
+ *   3. Раскомментируйте service в AndroidManifest.xml
+ *   4. Раскомментируйте apply plugin в app/build.gradle
+ */
+class BkonekteMessagingService : FirebaseMessagingService() {
+
+    companion object {
+        private const val TAG = "BkonekteFCM"
+        private const val CHANNEL_ID = "bkonekte_messages"
+        private const val CHANNEL_NAME = "Сообщения"
+        private const val CHANNEL_DESC = "Уведомления о новых сообщениях"
+    }
+
+    override fun onNewToken(token: String) {
+        Log.d(TAG, "Новый FCM токен: $token")
+
+        // Отправляем токен на ваш сервер, чтобы сервер мог отправлять push
+        // TODO: отправка token на сервер API
+        // api.sendFcmToken(token)
+    }
+
+    override fun onMessageReceived(message: RemoteMessage) {
+        Log.d(TAG, "Получено сообщение: ${message.messageId}")
+
+        // Данные из push-уведомления
+        val title = message.notification?.title
+            ?: message.data["title"]
+            ?: "Bkonekte"
+        val body = message.notification?.body
+            ?: message.data["body"]
+            ?: ""
+        val chatId = message.data["chatId"]
+        val messageId = message.data["messageId"]
+        val senderId = message.data["senderId"]
+        val type = message.data["type"]
+
+        // Создаём намерение для открытия приложения
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra("chatId", chatId)
+            putExtra("messageId", messageId)
+            putExtra("senderId", senderId)
+            putExtra("type", type)
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        // Создаём канал уведомления (требуется для Android 8+)
+        createNotificationChannel()
+
+        // Строим уведомление
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        // Показываем уведомление
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager.notify(System.currentTimeMillis().toInt(), notification)
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = CHANNEL_DESC
+                enableVibration(true)
+            }
+
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+}

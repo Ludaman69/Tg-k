@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Иконка: буква B на фиолетовом фоне (стилизация под вашу PWA иконку) -->
+    <path
+        android:fillColor="#6366f1"
+        android:pathData="M31,32h46v44H31z"
+        android:strokeWidth="0" />
+    <path
+        android:fillColor="#ffffff"
+        android:pathData="M41,42h12v12H41zM41,58h26v4H41zM55,42h14v12H55z"
+        android:strokeWidth="0" />
+</vector>

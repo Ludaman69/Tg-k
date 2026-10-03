@@ -1,0 +1,802 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Apple Color Emoji', 'Inter', system-ui, -apple-system, sans-serif;
+  --text-sm: 0.959rem;
+  --radius-xl: 1rem;
+  --text-xs: 0.99rem;
+  --radius-2xl: 1rem;
+  --color-zinc-400: #fff;
+  --radius-lg: 2.0rem;
+  --rounded-xl: 4.0rem;
+  --text-lg: 1.225rem;
+  --blur-sm: 20px;
+
+
+  --color-vortex-50: #eef2ff;
+  --color-vortex-100: #e0e7ff;
+  --color-vortex-200: #c7d2fe;
+  --color-vortex-300: #a5b4fc;
+  --color-vortex-400: #818cf8;
+  --color-vortex-500: #6366f1;
+  --color-vortex-600: #4f46e5;
+  --color-vortex-700: #4338ca;
+  --color-vortex-800: #3730a3;
+  --color-vortex-900: #312e81;
+  --color-vortex-950: #1e1b4b;
+
+  --color-green-300: oklch(0.98 0 0);
+
+  --color-surface: #09090b;
+  --color-surface-secondary: #1e1f29;
+  --color-surface-hover: #222226;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-light: rgba(255, 255, 255, 0.12);
+
+  --color-accent: #6366f1;
+  --color-accent-hover: #818cf8;
+  --color-accent-light: rgba(99, 102, 241, 0.15);
+}
+/* ── Apple Color Emoji font ── */
+@font-face {
+  font-family: 'Apple Color Emoji';
+  src: url('/fonts/AppleColorEmoji.ttf') format('truetype');
+  font-display: swap;
+  unicode-range:
+    U+200D,           /* Zero Width Joiner */
+    U+FE0F,           /* Variation Selector-16 (emoji) */
+    U+203C, U+2049,   /* ‼ ⁉ */
+    U+2122, U+2139,   /* ™ ℹ */
+    U+2194-2199,      /* ↔↕↖↗↘↙ */
+    U+21A9-21AA,      /* ↩ ↪ */
+    U+231A-231B,      /* ⌚⌛ */
+    U+2328,           /* ⌨ */
+    U+23CF,           /* ⏏ */
+    U+23E9-23F3,      /* ⏩-⏳ */
+    U+23F8-23FA,      /* ⏸-⏺ */
+    U+24C2,           /* Ⓜ */
+    U+25AA-25AB,      /* ▪ ▫ */
+    U+25B6, U+25C0,   /* ▶ ◀ */
+    U+25FB-25FE,      /* ◻-◾ */
+    U+2600-27BF,      /* ☀-➿ (Misc Symbols, Dingbats) */
+    U+2934-2935,      /* ⤴ ⤵ */
+    U+2B05-2B07,      /* ⬅-⬇ */
+    U+2B1B-2B1C,      /* ⬛⬜ */
+    U+2B50,           /* ⭐ */
+    U+2B55,           /* ⭕ */
+    U+3030,           /* 〰 */
+    U+303D,           /* 〽 */
+    U+3297, U+3299,   /* ㊗ ㊙ */
+    U+1F000-1F02F,    /* Mahjong, Domino */
+    U+1F0A0-1F0FF,    /* Playing Cards */
+    U+1F100-1F64F,    /* Enclosed, Emoticons */
+    U+1F680-1F6FF,    /* Transport */
+    U+1F700-1F77F,    /* Alchemical */
+    U+1F780-1F7FF,    /* Geometric Shapes Extended */
+    U+1F800-1F8FF,    /* Supplemental Arrows-C */
+    U+1F900-1F9FF,    /* Supplemental Symbols & Pictographs */
+    U+1FA00-1FA6F,    /* Chess Symbols */
+    U+1FA70-1FAFF,    /* Symbols & Pictographs Extended-A */
+    U+1FB00-1FBFF,    /* Legacy Computing */
+    U+E0000-E007F;    /* Tags (emoji flags) */
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Запрещаем выделение текста по всему приложению,
+   чтобы зажатие/выделение не срабатывало на сообщениях, именах, кнопках и т.д. */
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Разрешаем выделение только в полях ввода (textarea, input, contenteditable) */
+input,
+textarea,
+[contenteditable="true"] {
+  user-select: auto;
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: transparent;
+}
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Fill the area behind the status bar with the header color on mobile */
+@supports (padding-top: env(safe-area-inset-top)) {
+  html {
+    background-color: transparent;
+  }
+}
+
+/*
+ * PWA standalone: make the system navigation bar area transparent
+ * by extending the app background under it. In a normal browser
+ * Chrome handles this automatically, but in standalone PWA the
+ * app must explicitly cover the safe-area-inset-bottom zone.
+ */
+@media (display-mode: standalone) {
+  html {
+    /* Extend background colour behind the bottom system bar */
+    background-color: #212332;
+  }
+
+  body {
+    /* Let the body background fill beneath the navigation bar */
+    background-color: #212332;
+  }
+
+  #root {
+    /* Use full viewport height including the area under the system bar */
+    height: 100vh;
+    height: 100dvh;
+  }
+}
+
+/*
+ * Нативная сборка (Capacitor): медиа-запрос display-mode в WebView
+ * не срабатывает, поэтому класс .native ставится из lib/native.ts.
+ */
+html.native,
+html.native body {
+  background-color: #212332;
+}
+
+html.native #root {
+  height: 100vh;
+  height: 100dvh;
+}
+
+/*
+ * Высота клавиатуры в native приходит из плагина Keyboard.
+ * Используйте var(--keyboard-height) там, где нужно поднять
+ * содержимое над клавиатурой.
+ */
+html.native {
+  --keyboard-height: 0px;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Плавный шиммер по тексту (бегущий светлый блик по буквам) */
+.shimmer-text {
+  background-image: linear-gradient(110deg, #71717a 35%, #f4f4f5 50%, #71717a 65%);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: shimmer-text-slide 4s linear infinite;
+}
+@keyframes shimmer-text-slide {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+body {
+  font-family: 'Apple Color Emoji', 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #09090b;
+  color: #fafafa;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.2s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.15s ease-out;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.glass-strong {
+  background: rgba(17, 17, 19, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Reduce GPU-heavy effects on mobile / low-power devices */
+@media (max-width: 768px), (hover: none) {
+  .glass,
+  .glass-strong {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .glass {
+    background: rgba(17, 17, 19, 0.96);
+  }
+  .glass-strong {
+    background: rgba(17, 17, 19, 0.98);
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bubble-sent {
+  background: #8774e1;
+}
+
+.bubble-sent ::selection {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.bubble-received {
+  background: #212332;
+}
+
+/* Мета (время + галочки) — живёт в flex-строке с реакциями,
+   всегда прижата к правому нижнему краю пузыря. */
+.message-meta {
+  white-space: nowrap;
+  font-size: 11px;
+  line-height: 1.35;
+  margin-left: 12px;
+  user-select: none;
+}
+
+/* ==================== */
+/*   Animation Keyframes */
+/* ==================== */
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes call-wave {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 6s ease-in-out 3s infinite;
+}
+
+.animate-call-wave {
+  animation: call-wave 2s ease-out infinite;
+}
+
+.animate-call-wave-delayed {
+  animation: call-wave 2s ease-out 1s infinite;
+}
+
+/* ==================== */
+/*      Chat Themes      */
+/* ==================== */
+
+.chat-theme-midnight {
+  background-color: #0e0e18;
+  background-image:
+    radial-gradient(ellipse at 15% 80%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%23ffffff' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.chat-theme-ocean {
+  background-color: #0b172a;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233b82f6' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.chat-theme-forest {
+  background-color: #0f1c15;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2310b981' fill-opacity='0.04' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.chat-theme-sunset {
+  background: linear-gradient(#1f111a, #150a0f);
+  position: relative;
+}
+.chat-theme-sunset::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 50% 150%, rgba(236, 72, 153, 0.1), transparent 60%);
+}
+
+.chat-theme-classic {
+  background-color: #121215;
+}
+
+.chat-theme-neon {
+  background-color: #0b0f19;
+  position: relative;
+}
+.chat-theme-neon::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  pointer-events: none;
+  background: radial-gradient(circle 400px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(139, 92, 246, 0.15), transparent 80%);
+  transition: background 0.15s ease-out;
+}
+
+.chat-theme-aurora {
+  background: linear-gradient(135deg, #022c22, #064e3b);
+  position: relative;
+}
+.chat-theme-aurora::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  pointer-events: none;
+  background: radial-gradient(circle 600px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(16, 185, 129, 0.2), transparent 70%);
+  transition: background 0.15s ease-out;
+}
+
+.chat-theme-cyber {
+  background-color: #000;
+  background-image:
+    linear-gradient(rgba(245, 158, 11, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 158, 11, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  position: relative;
+}
+.chat-theme-cyber::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  pointer-events: none;
+  background: radial-gradient(circle 300px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(245, 158, 11, 0.15), transparent);
+  transition: background 0.15s ease-out;
+}
+
+.chat-theme-glass {
+  background-color: #0d1117;
+  position: relative;
+  overflow: hidden;
+}
+.chat-theme-glass::before {
+  content: '';
+  position: absolute;
+  width: 50vw;
+  height: 50vh;
+  left: var(--mouse-x, 50%);
+  top: var(--mouse-y, 50%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.2), transparent 60%);
+  filter: blur(80px);
+  transition: left 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), top 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: left, top;
+}
+@media (max-width: 768px), (hover: none) {
+  .chat-theme-glass::before {
+    filter: blur(40px);
+    width: 40vw;
+    height: 40vh;
+  }
+}
+
+.chat-theme-void {
+  background-color: #000;
+  position: relative;
+}
+.chat-theme-void::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  pointer-events: none;
+  background: radial-gradient(circle 120px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.05), transparent);
+  transition: background 0.1s;
+}
+
+.chat-bg {
+  background-color: #09090b;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 80%, rgba(168, 85, 247, 0.04) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236366f1' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+::selection {
+  background: rgba(99, 102, 241, 0.3);
+  text-shadow: 0 0 8px rgba(99, 102, 241, 0.4);
+}
+
+input:focus, textarea:focus {
+  outline: none;
+}
+
+/* Focus-visible ring for keyboard navigation accessibility */
+:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.6);
+  outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* emoji-mart dark theme overrides */
+em-emoji-picker {
+  --em-rgb-background: 17, 17, 19;
+  --em-rgb-input: 26, 26, 30;
+  --em-rgb-color: 240, 240, 240;
+  --border-radius: 0 0 16px 16px;
+  border: none !important;
+}
+
+/* ── Video Circle Message (Telegram‑style round video bubble) ── */
+.video-message-circle {
+  width: 640px;
+  height: 640px;
+  max-width: 70vw;
+  max-height: 70vw;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  background: #000;
+  cursor: pointer;
+  -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
+  mask-image: radial-gradient(circle, white 100%, black 100%);
+}
+
+.video-message-circle video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Play button overlay on video circle */
+.video-message-circle .video-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 1;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.video-message-circle.playing .video-play-overlay {
+  opacity: 0;
+}
+
+.video-message-circle .video-play-overlay svg {
+  width: 56px;
+  height: 56px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+}
+
+/* Pause button that appears on tap during playback */
+.video-message-circle .video-pause-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.video-message-circle.flash-pause .video-pause-hint {
+  opacity: 1;
+}
+
+.video-message-circle .video-pause-hint svg {
+  width: 48px;
+  height: 48px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+}
+
+/* Progress ring around the video circle during playback */
+.video-message-circle .video-progress-ring {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .video-message-circle {
+    width: 320px;
+    height: 320px;
+    max-width: 72vw;
+    max-height: 72vw;
+  }
+
+  .video-message-circle .video-play-overlay svg {
+    width: 44px;
+    height: 44px;
+  }
+
+  .video-message-circle .video-pause-hint svg {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* ── Regular Video Message (Telegram‑style rectangular video) ── */
+.video-message {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+}
+
+.video-message video {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* Timer overlay — top-left */
+.video-timer-overlay {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.35);
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 7px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.3px;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+/* Message time overlay — bottom-right */
+.video-time-overlay {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.35);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  pointer-events: none;
+}
+@keyframes recording-pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.45); }
+  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+.recording-pulse-ring {
+  animation: recording-pulse-ring 1.4s ease-out infinite;
+}
+
+@keyframes slide-cancel-hint {
+  0%, 100% { opacity: 0.5; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(-6px); }
+}
+.slide-cancel-hint {
+  animation: slide-cancel-hint 1.8s ease-in-out infinite;
+}
+
+@keyframes lock-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.lock-bounce {
+  animation: lock-bounce 1.2s ease-in-out infinite;
+}
+
+/* ── Performance: contain & content-visibility for message lists ── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Skeleton-анимация: бегущий блик для элементов загрузки */
+.skeleton-shimmer {
+  background: linear-gradient(
+    110deg,
+    rgba(113, 113, 122, 0.25) 30%,
+    rgba(161, 161, 170, 0.35) 50%,
+    rgba(113, 113, 122, 0.25) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+/* Сообщения теперь виртуализированы: в DOM находятся только видимые ряды
+   плюс overscan, поэтому content-visibility больше не нужен.
+   Более того, он вреден — `content-visibility: auto` пропускает лейаут
+   содержимого, и ResizeObserver виртуализатора (measureElement) получал бы
+   нулевую/устаревшую высоту, ломая позиционирование и скролл.
+   Оставляем только `contain: layout`, чтобы лейаут одного пузыря не влиял
+   на соседние ряды. */
+.msg-item {
+  contain: layout;
+}
+
+/* GPU-promote scrollable containers */
+.scroll-container-gpu {
+  /* will-change: scroll-position — REMOVED: создаёт отдельный GPU-слой,
+     который браузер вынужден постоянно синхронизировать, вызывая «рваный» скролл.
+     -webkit-overflow-scrolling: touch достаточно для плавного скролла на iOS. */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Инфинити-скролл истории сообщений ──
+   Переопределяем на auto: scroll-anchoring браузера стабилизирует
+   скролл при монтировании/размонтировании виртуальных строк.
+   Собственный prepend-анкоринг в MessageList.tsx компенсирует прирост
+   высоты при подгрузке истории — двойного сдвига не будет. */
+.messages-scroll {
+  overflow-anchor: auto;
+}
+
+/* Disable mouse-follow pseudo-elements on touch devices for perf */
+@media (hover: none) {
+  .chat-theme-midnight::before,
+  .chat-theme-ocean::before,
+  .chat-theme-forest::before,
+  .chat-theme-sunset::before,
+  .chat-theme-neon::before,
+  .chat-theme-aurora::before,
+  .chat-theme-cyber::before,
+  .chat-theme-glass::before,
+  .chat-theme-void::before {
+    display: none;
+  }
+}
+
+/* Disable backdrop-filter in native WebView for performance.
+   backdrop-filter: blur() forces GPU re-composition on every frame
+   and is especially slow in Android WebView (Capacitor). */
+@supports (-webkit-backdrop-filter: blur(1px)) {
+  @media (hover: none) and (pointer: coarse) {
+    .backdrop-blur-sm,
+    .backdrop-blur,
+    .backdrop-blur-md,
+    .backdrop-blur-lg,
+    .backdrop-blur-xl {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+  }
+}
+
+
+/* ── Date separator appear animation ── */
+@keyframes date-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-date-appear {
+  animation: date-appear 0.15s ease-out both;
+}
+
+
+
+/* ── Разделители дат ──
+   ВАЖНО: здесь нельзя использовать `position: sticky`.
+   После виртуализации каждый ряд списка — абсолютно позиционированный блок
+   (`transform: translateY(...)`), и он же становится containing block для
+   sticky-потомка. В результате бейдж даты «прилипал» к верху скролл-контейнера,
+   но был заперт внутри своего ряда: при прокрутке он сползал со своего места
+   и наезжал на сообщение.
+   Поэтому дата теперь обычный блок в потоке ряда — она стоит ровно над первым
+   сообщением своей группы и прокручивается вместе с ней. */
+.date-separator {
+  position: relative;
+  /* Выше пузырей: полупрозрачный фон бейджа не должен перекрываться
+     содержимым соседних сообщений. */
+  z-index: 5;
+}
+
+/* ── Ряд виртуального списка ──
+   `measureElement` виртуализатора снимает высоту через border-box, и внешние
+   margin детей (у пузыря это `mb-1.5` / `mb-[3px]`) в неё НЕ попадают.
+   Без изоляции такой margin «вытекал» за пределы ряда: виртуализатор считал
+   ряд ниже реального, ряды накладывались друг на друга и бейдж даты со
+   временем оказывался не на своём месте.
+   `display: flow-root` создаёт новый block formatting context — margin'ы
+   детей учитываются внутри ряда и корректно попадают в измерение. */
+.virtual-row {
+  display: flow-root;
+}
+

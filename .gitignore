@@ -1,0 +1,105 @@
+# Dependencies
+node_modules/
+
+# Build output
+apps/server/dist/
+apps/web/dist/
+
+# Capacitor / Android (сборочные артефакты)
+apps/web/android/build/
+apps/web/android/.gradle/
+apps/web/android/.kotlin/
+apps/web/android/app/build/
+apps/web/android/app/release/
+apps/web/android/local.properties
+apps/web/android/keystore.properties
+apps/web/android/app/google-services.json
+apps/web/ios/App/build/
+apps/web/ios/App/Pods/
+apps/web/ios/App/Podfile.lock
+apps/web/ios/App/App/GoogleService-Info.plist
+
+# TWA (legacy) сборочные артефакты
+android-twa/build/
+android-twa/.gradle/
+android-twa/.kotlin/
+android-twa/app/build/
+
+# Раздача APK и Firebase-креды
+apps/server/downloads/*.apk
+apps/server/fcm-service-account.json
+*.keystore
+!android-twa/bkonekte-release.keystore
+
+# Environment files
+.env
+apps/server/.env
+
+# Uploads (user data)
+apps/server/uploads/*
+!apps/server/uploads/.gitkeep
+
+# Deploy artifacts
+vortex-deploy/
+vortex-deploy.tar.gz
+
+# Credentials
+CREDENTIALS.txt
+
+# SSL сертификаты
+ssl/
+
+# coturn (содержит секреты)
+coturn/turnserver.conf
+
+# Security audit (personal)
+SECURITY_AUDIT.md
+
+# Firebase admin SDK keys
+apps/server/bkonekte-firebase-adminsdk-*.json
+apps/server/fcm-service-account.json
+
+# Dev database
+apps/server/prisma/dev.db
+
+# Logs
+*.log
+
+# Build artifacts
+build-stderr.txt
+build-stdout.txt
+*-stderr.txt
+*-stdout.txt
+publish-*.txt
+
+# JDK (local)
+jdk21/
+
+# Backups
+vortex_bk
+vortex_backup
+
+# Fonts (large, downloaded separately)
+apps/web/public/fonts/
+
+# Capacitor / native env
+apps/web/.env.native
+
+# APK downloads
+apps/server/downloads/
+
+# Duplicate sounds (already in apps/web/public/sounds/)
+sounds/
+
+# Temporary SQL scripts
+check_*.sql
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

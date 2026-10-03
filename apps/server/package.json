@@ -1,0 +1,51 @@
+{
+  "name": "@vortex/server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio",
+    "db:indexes": "tsx prisma/apply-indexes.ts",
+    "db:check-waveform": "tsx prisma/check-waveform.ts",
+    "db:media-stats": "tsx prisma/media-stats.ts",
+    "db:backfill-thumbnails": "tsx prisma/backfill-thumbnails.ts",
+    "db:verify-thumbnails": "tsx prisma/verify-thumbnails.ts",
+    "db:fix-owner": "psql -U postgres -d vortex -f prisma/fix-table-owner.sql"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.6.0",
+    "@prisma/client": "^6.3.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^4.21.2",
+    "express-rate-limit": "^8.2.1",
+    "firebase-admin": "^14.4.0",
+    "jsdom": "^30.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "socket.io": "^4.8.1",
+    "uuid": "^11.0.5",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/express-rate-limit": "^5.1.3",
+    "@types/jsdom": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/mime-types": "^3.0.1",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.10.0",
+    "@types/uuid": "^10.0.0",
+    "prisma": "^6.3.0",
+    "sharp": "^0.35.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}

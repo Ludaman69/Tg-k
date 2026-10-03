@@ -1,0 +1,22 @@
+# Android
+*.iml
+.idea/
+.gradle/
+build/
+local.properties
+*.keystore
+*.jks
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+*.log
+*.hprof
+
+# FCM (требуется скачать из Firebase Console)
+google-services.json
+
+# OS
+.DS_Store
+Thumbs.db

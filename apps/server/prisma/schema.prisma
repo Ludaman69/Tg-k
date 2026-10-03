@@ -1,0 +1,243 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(uuid())
+  username       String   @unique
+  displayName    String   @default("")
+  email          String?  @unique
+  phone          String?
+  password       String
+  avatar         String?
+  bio            String?
+  birthday       String?
+  createdAt      DateTime @default(now())
+  lastSeen       DateTime @default(now())
+  isOnline       Boolean  @default(false)
+  hideStoryViews Boolean  @default(false)
+  registrationIp String?
+
+  messages            Message[]
+  chatMembers         ChatMember[]
+  reactions           Reaction[]
+  readReceipts        ReadReceipt[]
+  forwardedMessages   Message[]          @relation("ForwardedFrom")
+  stories             Story[]
+  storyViews          StoryView[]
+  friendshipsSent     Friendship[]       @relation("FriendshipsSent")
+  friendshipsReceived Friendship[]       @relation("FriendshipsReceived")
+  pushSubscriptions   PushSubscription[]
+  deviceTokens        DeviceToken[]
+}
+
+model Chat {
+  id        String   @id @default(uuid())
+  type      String   @default("personal")
+  name      String?
+  avatar    String?
+  createdAt DateTime @default(now())
+
+  members        ChatMember[]
+  messages       Message[]
+  pinnedMessages PinnedMessage[]
+}
+
+model ChatMember {
+  id         String    @id @default(uuid())
+  chatId     String
+  userId     String
+  role       String    @default("member")
+  joinedAt   DateTime  @default(now())
+  isMuted    Boolean   @default(false)
+  isArchived Boolean   @default(false)
+  isPinned   Boolean   @default(false)
+  clearedAt  DateTime?
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([chatId, userId])
+  @@index([userId])
+}
+
+model Message {
+  id              String    @id @default(uuid())
+  chatId          String
+  senderId        String
+  content         String?
+  type            String    @default("text")
+  replyToId       String?
+  quote           String?
+  forwardedFromId String?
+  isEdited        Boolean   @default(false)
+  isDeleted       Boolean   @default(false)
+  scheduledAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  chat          Chat      @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sender        User      @relation(fields: [senderId], references: [id])
+  replyTo       Message?  @relation("Reply", fields: [replyToId], references: [id])
+  replies       Message[] @relation("Reply")
+  forwardedFrom User?     @relation("ForwardedFrom", fields: [forwardedFromId], references: [id])
+
+  media     Media[]
+  reactions Reaction[]
+  readBy    ReadReceipt[]
+  pinnedIn  PinnedMessage[]
+  hiddenBy  HiddenMessage[]
+
+  // Основной индекс для пагинации истории чата (WHERE chatId = ? ORDER BY createdAt DESC)
+  @@index([chatId, createdAt])
+  // Ускоряет фильтр isDeleted + курсор внутри чата
+  @@index([chatId, isDeleted, createdAt])
+  @@index([senderId])
+  @@index([replyToId])
+}
+
+model Media {
+  id        String  @id @default(uuid())
+  messageId String
+  type      String
+  url       String
+  filename  String?
+  thumbnail String?
+  size      Int?
+  duration  Float?
+  width     Int?
+  height    Int?
+  /// Нормализованные пики громкости голосового сообщения (значения 0..1).
+  /// Считаются на клиенте-отправителе из уже готового AnalyserNode при записи,
+  /// поэтому получателям не нужно скачивать и декодировать аудио для waveform.
+  waveform  Float[]
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+}
+
+model Reaction {
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@unique([messageId, userId, emoji])
+  @@index([messageId])
+}
+
+model ReadReceipt {
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String
+  readAt    DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@unique([messageId, userId])
+  @@index([messageId])
+}
+
+model PinnedMessage {
+  id        String   @id @default(uuid())
+  chatId    String
+  messageId String
+  pinnedAt  DateTime @default(now())
+
+  chat    Chat    @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@unique([chatId, messageId])
+}
+
+model Story {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String   @default("text")
+  mediaUrl  String?
+  content   String?
+  bgColor   String?
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  views StoryView[]
+}
+
+model StoryView {
+  id       String   @id @default(uuid())
+  storyId  String
+  userId   String
+  viewedAt DateTime @default(now())
+
+  story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@unique([storyId, userId])
+}
+
+model HiddenMessage {
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String
+  hiddenAt  DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@index([userId])
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String
+  endpoint  String
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, endpoint])
+}
+
+/// Push-токен нативного приложения (FCM на Android, APNs через FCM на iOS).
+/// Используется вместо Web Push, который недоступен в WebView.
+model DeviceToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String
+  platform  String // android | ios
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, token])
+  @@index([userId])
+}
+
+model Friendship {
+  id        String   @id @default(uuid())
+  userId    String
+  friendId  String
+  status    String   @default("pending") // pending | accepted | declined
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User @relation("FriendshipsSent", fields: [userId], references: [id], onDelete: Cascade)
+  friend User @relation("FriendshipsReceived", fields: [friendId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, friendId])
+}

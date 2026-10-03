@@ -1,0 +1,47 @@
+{
+  "name": "Bkonekte",
+  "short_name": "Bkonekte",
+  "description": "Современный мессенджер с защитой конфиденциальности",
+  "start_url": "/",
+  "display": "standalone",
+  "display_override": ["standalone"],
+  "orientation": "portrait",
+  "background_color": "#212332",
+  "theme_color": "transparent",
+  "navigationBarColor": "#00000000",
+  "categories": ["social", "communication"],
+  "edge_side_panel": { "preferred_width": 400 },
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [],
+  "lang": "ru",
+  "dir": "ltr",
+  "scope": "/",
+  "id": "bkonekte-pwa",
+  "scope_extensions": [
+    {
+      "origin": "https://tg-k.ru"
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=com.bkonekte.app",
+      "id": "com.bkonekte.app"
+    }
+  ]
+}

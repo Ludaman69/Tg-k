@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Базовая тема — используется для splash screen и офлайн-страницы -->
+    <!-- ВАЖНО: используем Theme.Material, не Theme.AppCompat, т.к. LauncherActivity наследует Activity, а не AppCompatActivity -->
+    <style name="Theme.Bkonekte" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:navigationBarColor">@color/primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Тема для splash screen -->
+    <style name="Theme.Bkonekte.Splash" parent="Theme.Bkonekte">
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+</resources>
